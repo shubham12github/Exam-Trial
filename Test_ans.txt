@@ -1,0 +1,217 @@
+1.What are the difference between cookie, local storage and session storage?
+
+Difference Between Local Storage, Session Storage, And Cookies
+Local Storage	 Session Storage	Cookies 
+The storage capacity of local storage is 5MB/10MB	The storage capacity of session storage is 5MB	The storage capacity of Cookies is 4KB
+As it is not session-based, it must be deleted via javascript or manually	It’s session-based and works per window or tab. This means that data is stored only for the duration of a session, i.e., until the browser (or tab) is closed	Cookies expire based on the setting and working per tab and window 
+The client  can only read local storage	The client can only read local storage	Both clients and servers can read and write the cookies
+There is no transfer of data to the server	There is no transfer of data to the server	Data transfer to the server is exist
+There are fewer old browsers that support it	There are fewer old browsers that support it	It is supported by all the browser including older browser
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2.Explain the output of the above-given code and explain why?
+for (var i = 0; i < 5; i++) {
+  setTimeout(() => console.log(i), 100)
+}
+
+Output of this code is 5 5 5 5 5
+We are using for loop when we need to execute some program no of times.Here variable is declared inside for loop using ‘var’ keyword having scope is global because of the for loop is not enclosed in any function.value of is increamented by 1 at each iteration of the for loop by using unary ++ operator. when setTimeout callback function is called value of the variable is ‘i’ is ‘5’ at every time because of the global scope that’s why output is 5 5 5 5 5. In this code ‘100’ is timespan in second.
+
+
+3. What is Sharding in MongoDB, and how does it work?
+
+Sharding is a method for distributing data across multiple machines. MongoDB uses sharding to support deployments with very large data sets and high throughput operations. Database systems with large data sets or high throughput applications can challenge the capacity of a single server.
+
+
+
+
+
+
+
+
+
+
+
+
+4. What is promise chaining? Explain with an example.
+
+Promise Chaining: Promise Chaining is a simple concept by which we may initialize another promise inside our .then() method and accordingly we may execute our results. The function inside then captures the value returned by the previous promise 
+The syntax for using promise chaining is as follows.
+•	HTML
+<script>
+    let promise = new Promise((resolve, reject) => {
+    resolve("Hello JavaScript");
+    });
+     
+    promise
+    .then( function (result1){
+        console.log(result1);
+        return new Promise((resolve,reject) =>{
+            resolve("GFG is awesome");
+        })
+    })
+    .then((result2) => {
+        console.log(result2);
+    });
+</script>
+Output: As illustrated above, while executing the declared promise we are returning another promise inside the .then() and executing our results accordingly. Another then is used to capture the new promise. This is known as promise chaining. This solves the problem of callback hell.
+
+Hello JavaScript
+GFG is awesome
+
+5. What are Higher-Order Components (HOC) in React and how do they work?
+
+A higher-order component (HOC) is an advanced technique in React for reusing component logic. HOCs are not part of the React API, per se. They are a pattern that emerges from React’s compositional nature.
+A higher-order component is a function that takes in a component and returns a new component.
+Using code, we can rewrite the above statement like so:
+const newComponent = higherFunction(WrappedComponent);
+Whereas a component transforms props into UI, a higher-order component transforms a component into another component.
+HOCs are common in third-party React libraries, such as Redux’s connect and Relay’s createFragmentContainer.
+
+
+6. What is callback hell? Explain different ways to solve callback hell with examples each.
+
+Callback Hell: Callback Hell is essentially nested callbacks stacked below one another forming a pyramid structure. Every callback depends/waits for the previous callback, thereby making a pyramid structure that affects the readability and maintainability of the code. 
+
+First solution to callback hell: Write comments
+The makeBurger callback hell is simple to understand. We can read it. It just… doesn’t look nice.
+If you’re reading makeBurger for the first time, you may think “Why the hell do we need so many callbacks to make a burger? It doesn’t make sense!”.
+In such a case, you’d want to leave comments to explain your code.
+// Makes a burger
+// makeBurger contains four steps:
+//   1. Get beef
+//   2. Cook the beef
+//   3. Get buns for the burger
+//   4. Put the cooked beef between the buns
+//   5. Serve the burger (from the callback)
+// We use callbacks here because each step is asynchronous.
+//   We have to wait for the helper to complete the one step
+//   before we can start the next step
+
+const makeBurger = nextStep => {
+  getBeef(function(beef) {
+    cookBeef(beef, function(cookedBeef) {
+      getBuns(function(buns) {
+        putBeefBetweenBuns(buns, beef, function(burger) {
+          nextStep(burger);
+        });
+      });
+    });
+  });
+};
+
+
+Second solution to callback hell: Split the callbacks into different functions
+Our callback hell example is already an example of this. Let me show you the step-by-step imperative code and you’ll see why.
+For getBeef, our first callback, we have to go to the fridge to get the beef. There are two fridges in the kitchen. We need to go to the right fridge.
+const getBeef = nextStep => {
+  const fridge = leftFright;
+  const beef = getBeefFromFridge(fridge);
+  nextStep(beef);
+};
+To cook beef, we need to put the beef into an oven; turn the oven to 200 degrees, and wait for twenty minutes.
+const cookBeef = (beef, nextStep) => {
+  const workInProgress = putBeefinOven(beef);
+  setTimeout(function() {
+    nextStep(workInProgress);
+  }, 1000 * 60 * 20);
+};
+Now imagine if you have to write each of these steps in makeBurger… you’ll probably faint from the sheer amount of code!
+
+
+Third solution to callback hell: Use promises
+Promises can make callback hell much easier to manage. Instead of the nested code you see above, you’ll have this:
+const makeBurger = () => {
+  return getBeef()
+    .then(beef => cookBeef(beef))
+    .then(cookedBeef => getBuns(beef))
+    .then(bunsAndBeef => putBeefBetweenBuns(bunsAndBeef));
+};
+
+// Make and serve burger
+makeBurger().then(burger => serve(burger));
+
+
+Converting callbacks to promises
+To convert callbacks into promises, we need to create a new promise for each callback. We can resolve the promise when the callback is successful. Or we can reject the promise if the callback fails.
+const getBeefPromise = _ => {
+  const fridge = leftFright;
+  const beef = getBeefFromFridge(fridge);
+  
+  return new Promise((resolve, reject) => {
+    if (beef) {
+      resolve(beef);
+    } else {
+      reject(new Error(“No more beef!”));
+    }
+  });
+};
+
+const cookBeefPromise = beef => {
+  const workInProgress = putBeefinOven(beef);
+  
+  return new Promise((resolve, reject) => {
+    setTimeout(function() {
+      resolve(workInProgress);
+    }, 1000 * 60 * 20);
+  });
+};
+In practice, callbacks would probably be written for you already. If you use Node, each function that contains a callback will have the same syntax:
+1.	The callback would be the last argument
+2.	The callback will always have two arguments. And these arguments are in the same order. (Error first, followed by whatever you’re interested in).
+// The function that’s defined for you
+const functionName = (arg1, arg2, callback) => {
+  // Do stuff here
+  callback(err, stuff);
+};
+
+// How you use the function
+functionName(arg1, arg2, (err, stuff) => {
+  if (err) {
+  console.error(err);
+  }
+  // Do stuff
+});
+
+
+Fourth solution to callback hell: Use asynchronous functions
+const makeBurger = async () => {
+  const beef = await getBeef();
+  const cookedBeef = await cookBeef(beef);
+  const buns = await getBuns();
+  const burger = await putBeefBetweenBuns(cookedBeef, buns);
+  return burger;
+};
+
+// Make and serve burger
+makeBurger().then(serve);
+There’s one improvement we can make to the makeBurger here. You can probably get two helpers to getBuns and getBeef at the same time. This means you can await them both with Promise.all.
+const makeBurger = async () => {
+  const [beef, buns] = await Promise.all(getBeef, getBuns);
+  const cookedBeef = await cookBeef(beef);
+  const burger = await putBeefBetweenBuns(cookedBeef, buns);
+  return burger;
+};
+
+// Make and serve burger
+makeBurger().then(serve);
+
+
+
+
+
+
